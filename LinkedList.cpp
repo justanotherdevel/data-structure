@@ -1,15 +1,8 @@
 #include<iostream>
 #include<stdio.h>
+#include "student.h"
 
 using namespace std;
-
-struct student				//data structure created
-{
-	int rollno;
-	char name[50];
-	double marks;
-	student*next;
-};
 
 student *head;				//declared global
 
@@ -24,27 +17,18 @@ student *AllocateNode()			//creates a pointer pointing to a node
 	cout << "Enter Marks" << endl;
 	cin >> ptr->marks;
 	ptr->next = NULL;
-	cout << "Congratulation!! Node successfully created" << endl;
 	return ptr;
 }
+
+//Rewrote PrependNode
 void PrependNode()
 {
-	if (head == NULL)	//checks the lists to be empty
-	{
-		student *temp;
-		temp = AllocateNode();
-		head = temp;		
-	}	
-	else 			// that if the list is not empty ie. it have more than one elements
-	{
-		student *temp1;
-		temp1 = AllocateNode();
-		student *temphead;
-		temphead = temp1;
-		temp1->next = head;
-		head = temphead;
-	}
+	student *tmp = AllocateNode();
+	tmp->next = head;
+	head = tmp;
 }
+
+//What if n-2 > the number of nodes? Run time error?
 void InsertNode()			//inserting node at nth location
 {
 	int n;
@@ -61,6 +45,9 @@ void InsertNode()			//inserting node at nth location
 	temp->next = ext;
 	ext->next = store;
 }
+
+// Search is not by position. Try implementing it with roll number
+// you might also need to add a condition when the roll number is not in the list
 void SearchList()
 {
 	int n;
@@ -74,6 +61,8 @@ void SearchList()
 	}	
 	cout << "Search completed";
 }
+
+// Condition where n is greater than the list size?
 void PrintNode()
 {
 	int n;
@@ -89,51 +78,35 @@ void PrintNode()
 	cout<<endl<<temp6->name;
 	cout<<endl<<temp6->marks;
 }
+
+// Rewrote the entire function
 void PrintList()
 {
-	student*temp;
-	temp = head;
-	while(temp->next!=NULL)
-	{
-		if(temp == head)
-		{
-			cout<<temp->rollno<<"   "<<temp->name<<"   "<<temp->marks<<endl;
-			temp = temp->next;
-		}
-		else
-		{
-			cout<<temp->rollno<<"   "<<temp->name<<"   "<<temp->marks<<endl;
-			temp = temp->next;
-		}
-		
+	student *temp = head;
+	while(temp){
+		cout << temp->rollno << " " << temp->name << " " << temp->marks;
+		temp = temp->next;
 	}
-			cout<<temp->rollno<<"   "<<temp->name<<"   "<<temp->marks<<endl;
 	
 }
+
+// Append only one node at a time
 void AppendNode()    //attaching node in the end
 {
-	int n;
-	cout<<"enter the no of nodes u want to attach in the end"<<endl;
-	cin>>n;
-	for(int i=0;i<n;i++)
-	{
-		if(head==NULL)
-		{
-			student*temp;
-			temp = AllocateNode();
-			head = temp;
+	student *tmp = AllocateNode();
+	student *iter = head;
+	if (iter) {
+		while (iter->next) {
+			iter = iter->next;
 		}
-		else
-		{
-			student*temp3;
-			temp3 = AllocateNode();
-			student*p;
-			p = temp3;
-			temp3->next = head;
-			head = p;
-		}
+		iter->next = tmp;
+	} else {
+		head = tmp;
 	}
 }
+
+// Maybe implement delete function with roll number and not position
+// Also, there is a memory leak situation
 void DeleteANode(int n)    //deleting a node at Nth position
 {
 	student*temp;
@@ -153,38 +126,30 @@ void DeleteANode(int n)    //deleting a node at Nth position
 			head = temp->next;
 	}
 }
+
+// Rewrote the entire function
 void DeleteFirstNode()
-{	
-	student*temp;
-	temp = head;
-	int i=1, n=1;				 //special case of nth form
-	if(n!=1)
-	{
-	while ((i<n-1)&&(temp->next!=NULL))
-	{
-		temp=temp->next;
-		i++;
-	}
-		temp->next = temp->next->next;
-}
-	else
-	{
-			head = temp->next;
+{
+	if (head) {
+		student *tmp = head;
+		head = head->next;
+		delete tmp;
 	}
 }
-	
+
+// Rewrote the entire function
 void DeleteLastNode()
-{	student*temp;
-	temp = head;
-	int i = 1;
-	while(temp->next!=NULL)
-	{
-		temp=temp->next;
-		i+=1;
+{
+	student *prev = head;
+	if (head) {
+		student *tmp = head;
+		while (tmp->next) {
+			prev = tmp;
+			tmp = tmp->next;	
+		}
+		delete tmp;
+		prev->next = 0;
 	}
-	
-	cout<<i;
-	DeleteANode(i);
 }
 void FindMthToLast()
 {
@@ -209,6 +174,8 @@ void FindMthToLast()
 	cout<<endl<<temp6->marks;
 		
 }
+
+// Didn't check this function
 void ListIntersection()
 {
 	int a,w;
@@ -319,6 +286,7 @@ void ListIntersection()
 		}
 	}
 }
+
 void ReverseList()
 {
 	student *p1, *p2, *p3; 						// three continuous nodes, previous, current and next
@@ -359,31 +327,31 @@ void ReverseList()
 int main()
 {
 	head = AllocateNode();
-	cout<<" Welcome....Enter your choice to perform action"<<endl;
-	cout<<"0: exit the loop"<<endl;
-	cout<<"1: A node has been allocated for you"<<endl;
-	cout<<"2: PerpendNode"<<endl;
-	cout<<"3: AppendNode"<<endl;
-	cout<<"4: InsertNode"<<endl;
-	cout<<"5: SearchListcout"<<endl;
-	cout<<"6: PrintNode"<<endl;
-	cout<<"7: PrintList"<<endl;
-	cout<<"8: DeleteFirstNode"<<endl;
-	cout<<"9: DeleteLastNode"<<endl;
-	cout<<"10: DeleteANode"<<endl;
-	cout<<"11: ReverseList"<<endl;
-	cout<<"12: ListUnion"<<endl;
-	cout<<"13: ListIntersection"<<endl;
-	cout<<"14: FindMthToLast"<<endl;
-	int a,n,i=1;
+	int a,n;
 	
-	while(i==1)
+	while(1)
 	{
+		cout<<"\nWelcome....Enter your choice to perform action"<<endl;
+		cout<<"0: exit the loop"<<endl;
+		cout<<"1: A node has been allocated for you"<<endl;
+		cout<<"2: PerpendNode"<<endl;
+		cout<<"3: AppendNode"<<endl;
+		cout<<"4: InsertNode"<<endl;
+		cout<<"5: SearchListcout"<<endl;
+		cout<<"6: PrintNode"<<endl;
+		cout<<"7: PrintList"<<endl;
+		cout<<"8: DeleteFirstNode"<<endl;
+		cout<<"9: DeleteLastNode"<<endl;
+		cout<<"10: DeleteANode"<<endl;
+		cout<<"11: ReverseList"<<endl;
+		cout<<"12: ListUnion"<<endl;
+		cout<<"13: ListIntersection"<<endl;
+		cout<<"14: FindMthToLast"<<endl;
 		cin>>a;
 		switch(a)
 		{
-			case 0: i=0;
-				    break;
+			case 0: 
+				        return 0;
 			case 1: cout<<"A node has been allocated for you";
 					break;
 			case 2: PrependNode();
