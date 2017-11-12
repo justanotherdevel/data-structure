@@ -1,8 +1,15 @@
 #include<iostream>
 #include<stdio.h>
-#include "student.h"
 
 using namespace std;
+
+struct student				//data structure created
+{
+	int rollno;
+	char name[50];
+	double marks;
+	student*next;
+};
 
 student *head;				//declared global
 
@@ -17,46 +24,43 @@ student *AllocateNode()			//creates a pointer pointing to a node
 	cout << "Enter Marks" << endl;
 	cin >> ptr->marks;
 	ptr->next = NULL;
+	cout << "Congratulation!! Node successfully created" << endl;
 	return ptr;
 }
-
-//Rewrote PrependNode
 void PrependNode()
 {
-	student *tmp = AllocateNode();
-	tmp->next = head;
-	head = tmp;
+	if (head == NULL)	//checks the lists to be empty
+	{
+		student *temp;
+		temp = AllocateNode();
+		head = temp;		
+	}	
+	else 			// that if the list is not empty ie. it have more than one elements
+	{
+		student *temp1;
+		temp1 = AllocateNode();
+		student *temphead;
+		temphead = temp1;
+		temp1->next = head;
+		head = temphead;
+	}
 }
-
-//What if n-2 > the number of nodes? Run time error?
 void InsertNode()			//inserting node at nth location
 {
 	int n;
-	bool check = true;
 	student *temp;
 	temp = head;
 	cout << "Position at which you want to insert the Linked List" << endl;
 	cin >> n;
-	for (int i = 1; i < n; i++)
+	for (int i =0; i < n-2; i++)
 	{
 		temp = temp->next;
-		if (temp == NULL)
-		{
-			cout << "the linked list is short that it does not contain that much element... Please try again with a smaller number" << endl;
-			check = false;
-		}
-		if (check == true)
-		{	
-			student *store  = temp->next;
-			student *ext = AllocateNode();
-			temp->next = ext;
-			ext->next = store;
-		}
-	}
+	}	
+	student *store  = temp->next;
+	student *ext = AllocateNode();
+	temp->next = ext;
+	ext->next = store;
 }
-
-// Search is not by position. Try implementing it with roll number
-// you might also need to add a condition when the roll number is not in the list
 void SearchList()
 {
 	int n;
@@ -70,8 +74,6 @@ void SearchList()
 	}	
 	cout << "Search completed";
 }
-
-// Condition where n is greater than the list size?
 void PrintNode()
 {
 	int n;
@@ -79,7 +81,7 @@ void PrintNode()
 	cin>>n;
 	student*temp6;
 	temp6=head;
-	while (rollno)
+	for(int i=1;i<n;i++)
 	{
 		temp6 = temp6->next;
 	}
@@ -87,39 +89,51 @@ void PrintNode()
 	cout<<endl<<temp6->name;
 	cout<<endl<<temp6->marks;
 }
-
-// Rewrote the entire function
 void PrintList()
 {
-	student *temp = head;
-	while(temp){
-		cout << temp->rollno << " " << temp->name << " " << temp->marks;
-		temp = temp->next;
+	student*temp;
+	temp = head;
+	while(temp->next!=NULL)
+	{
+		if(temp == head)
+		{
+			cout<<temp->rollno<<"   "<<temp->name<<"   "<<temp->marks<<endl;
+			temp = temp->next;
+		}
+		else
+		{
+			cout<<temp->rollno<<"   "<<temp->name<<"   "<<temp->marks<<endl;
+			temp = temp->next;
+		}
+		
 	}
+			cout<<temp->rollno<<"   "<<temp->name<<"   "<<temp->marks<<endl;
 	
 }
-
-// Append only one node at a time
-<<<<<<< HEAD
-void AppendNode()    				//attaching node in the end
-=======
 void AppendNode()    //attaching node in the end
->>>>>>> a6526ff2cb99b782b46a5b55997fd31d291d483b
 {
-	student *tmp = AllocateNode();
-	student *iter = head;
-	if (iter) {
-		while (iter->next) {
-			iter = iter->next;
+	int n;
+	cout<<"enter the no of nodes u want to attach in the end"<<endl;
+	cin>>n;
+	for(int i=0;i<n;i++)
+	{
+		if(head==NULL)
+		{
+			student*temp;
+			temp = AllocateNode();
+			head = temp;
 		}
-		iter->next = tmp;
-	} else {
-		head = tmp;
+		else
+		{
+			student*temp3;
+			temp3 = AllocateNode();
+			student*p;
+			p = temp3;
+			temp3->next = head;
+			head = p;
+		}
 	}
 }
-
-// Maybe implement delete function with roll number and not position
-// Also, there is a memory leak situation
 void DeleteANode(int n)    //deleting a node at Nth position
 {
 	student*temp;
@@ -127,7 +141,7 @@ void DeleteANode(int n)    //deleting a node at Nth position
 	int i=1;
 	if(n!=1)
 	{
-	while ((i<n-1)&&(temp->next))
+	while ((i<n-1)&&(temp->next!=NULL))
 	{
 		temp=temp->next;
 		i++;
@@ -139,30 +153,38 @@ void DeleteANode(int n)    //deleting a node at Nth position
 			head = temp->next;
 	}
 }
-
-// Rewrote the entire function
 void DeleteFirstNode()
-{
-	if (head) {
-		student *tmp = head;
-		head = head->next;
-		delete tmp;
+{	
+	student*temp;
+	temp = head;
+	int i=1, n=1;				 //special case of nth form
+	if(n!=1)
+	{
+	while ((i<n-1)&&(temp->next!=NULL))
+	{
+		temp=temp->next;
+		i++;
+	}
+		temp->next = temp->next->next;
+}
+	else
+	{
+			head = temp->next;
 	}
 }
-
-// Rewrote the entire function
+	
 void DeleteLastNode()
-{
-	student *prev = head;
-	if (head) {
-		student *tmp = head;
-		while (tmp->next) {
-			prev = tmp;
-			tmp = tmp->next;	
-		}
-		delete tmp;
-		prev->next = 0;
+{	student*temp;
+	temp = head;
+	int i = 1;
+	while(temp->next!=NULL)
+	{
+		temp=temp->next;
+		i+=1;
 	}
+	
+	cout<<i;
+	DeleteANode(i);
 }
 void FindMthToLast()
 {
@@ -170,7 +192,7 @@ void FindMthToLast()
 	int x, m, i=1 ;
 	cout<<"enter the value of M you want to find ! "<<endl;//mth to last means  n-l+1 th from beginning
 	cin>>m;
-	while(temp->next) //calculating current size of linked list
+	while(temp->next!=NULL) //calculating current size of linked list
 	{
 		temp = temp->next;
 		i++;
@@ -187,8 +209,6 @@ void FindMthToLast()
 	cout<<endl<<temp6->marks;
 		
 }
-
-// Didn't check this function
 void ListIntersection()
 {
 	int a,w;
@@ -299,7 +319,6 @@ void ListIntersection()
 		}
 	}
 }
-
 void ReverseList()
 {
 	student *p1, *p2, *p3; 						// three continuous nodes, previous, current and next
@@ -340,31 +359,31 @@ void ReverseList()
 int main()
 {
 	head = AllocateNode();
-	int a,n;
+	cout<<" Welcome....Enter your choice to perform action"<<endl;
+	cout<<"0: exit the loop"<<endl;
+	cout<<"1: A node has been allocated for you"<<endl;
+	cout<<"2: PerpendNode"<<endl;
+	cout<<"3: AppendNode"<<endl;
+	cout<<"4: InsertNode"<<endl;
+	cout<<"5: SearchListcout"<<endl;
+	cout<<"6: PrintNode"<<endl;
+	cout<<"7: PrintList"<<endl;
+	cout<<"8: DeleteFirstNode"<<endl;
+	cout<<"9: DeleteLastNode"<<endl;
+	cout<<"10: DeleteANode"<<endl;
+	cout<<"11: ReverseList"<<endl;
+	cout<<"12: ListUnion"<<endl;
+	cout<<"13: ListIntersection"<<endl;
+	cout<<"14: FindMthToLast"<<endl;
+	int a,n,i=1;
 	
-	while(1)
+	while(i==1)
 	{
-		cout<<"\nWelcome....Enter your choice to perform action"<<endl;
-		cout<<"0: exit the loop"<<endl;
-		cout<<"1: A node has been allocated for you"<<endl;
-		cout<<"2: PerpendNode"<<endl;
-		cout<<"3: AppendNode"<<endl;
-		cout<<"4: InsertNode"<<endl;
-		cout<<"5: SearchListcout"<<endl;
-		cout<<"6: PrintNode"<<endl;
-		cout<<"7: PrintList"<<endl;
-		cout<<"8: DeleteFirstNode"<<endl;
-		cout<<"9: DeleteLastNode"<<endl;
-		cout<<"10: DeleteANode"<<endl;
-		cout<<"11: ReverseList"<<endl;
-		cout<<"12: ListUnion"<<endl;
-		cout<<"13: ListIntersection"<<endl;
-		cout<<"14: FindMthToLast"<<endl;
 		cin>>a;
 		switch(a)
 		{
-			case 0: 
-				        return 0;
+			case 0: i=0;
+				    break;
 			case 1: cout<<"A node has been allocated for you";
 					break;
 			case 2: PrependNode();
