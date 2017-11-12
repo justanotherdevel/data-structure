@@ -101,7 +101,10 @@ void PrintList()
 
 // Append only one node at a time
 <<<<<<< HEAD
+void AppendNode()    				//attaching node in the end
+=======
 void AppendNode()    //attaching node in the end
+>>>>>>> a6526ff2cb99b782b46a5b55997fd31d291d483b
 {
 	student *tmp = AllocateNode();
 	student *iter = head;
