@@ -32,27 +32,18 @@ void PrependNode()
 void InsertNode()			//inserting node at nth location
 {
 	int n;
-	bool check = true;
 	student *temp;
 	temp = head;
 	cout << "Position at which you want to insert the Linked List" << endl;
 	cin >> n;
-	for (int i = 1; i < n; i++)
+	for (int i =0; i < n-2; i++)
 	{
 		temp = temp->next;
-		if (temp == NULL)
-		{
-			cout << "the linked list is short that it does not contain that much element... Please try again with a smaller number" << endl;
-			check = false;
-		}
-		if (check == true)
-		{	
-			student *store  = temp->next;
-			student *ext = AllocateNode();
-			temp->next = ext;
-			ext->next = store;
-		}
-	}
+	}	
+	student *store  = temp->next;
+	student *ext = AllocateNode();
+	temp->next = ext;
+	ext->next = store;
 }
 
 // Search is not by position. Try implementing it with roll number
@@ -79,7 +70,7 @@ void PrintNode()
 	cin>>n;
 	student*temp6;
 	temp6=head;
-	while (rollno)
+	for(int i=1;i<n;i++)
 	{
 		temp6 = temp6->next;
 	}
@@ -123,7 +114,7 @@ void DeleteANode(int n)    //deleting a node at Nth position
 	int i=1;
 	if(n!=1)
 	{
-	while ((i<n-1)&&(temp->next))
+	while ((i<n-1)&&(temp->next!=NULL))
 	{
 		temp=temp->next;
 		i++;
@@ -166,7 +157,7 @@ void FindMthToLast()
 	int x, m, i=1 ;
 	cout<<"enter the value of M you want to find ! "<<endl;//mth to last means  n-l+1 th from beginning
 	cin>>m;
-	while(temp->next) //calculating current size of linked list
+	while(temp->next!=NULL) //calculating current size of linked list
 	{
 		temp = temp->next;
 		i++;
