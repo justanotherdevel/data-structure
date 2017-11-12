@@ -1,4 +1,4 @@
-nclude<iostream>
+#include<iostream>
 using namespace std;
 struct student   //abstract data type created
 {
@@ -20,4 +20,3 @@ void DeleteLastNode();
 void FindMthToLast();
 void ListIntersection();
 void ReverseList();
-student*head;//declared global
